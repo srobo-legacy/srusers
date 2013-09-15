@@ -27,6 +27,26 @@ def list():
 
     return users
 
+def new_username(college_id, first_name, last_name, tmpset = []):
+    """
+    Creates a new unique username, taking into account any existing names
+    either in the database, plus those in the collection passed.
+    """
+    prefix = "%s_%s%s" % (college_id, first_name[0], last_name[0])
+    prefix = prefix.lower()
+
+    def c(i):
+        return "%s%i" % (prefix, i)
+
+    n = 1
+    u = sr.user( c(n) )
+
+    while u.in_db or u.username in tmpset:
+        n += 1
+        u = sr.user( c(n) )
+
+    return u.username
+
 class user:
     """A user"""
     map = { "cname" : "cn",
